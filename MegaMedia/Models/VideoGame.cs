@@ -7,7 +7,9 @@ namespace MegaMedia.Models
 {
     public class VideoGame : Product
     {
-        public string Platform { get; set; }
-        
+        public string Developer { get; set; }
+
+        // Establishing the many-to-many relationship with User
+        public virtual ICollection<User> UsersWhoRented { get; set; } = new List<User>();
     }
 }
