@@ -28,7 +28,7 @@ namespace MegaMedia
 
         public IQueryable<VideoGame> GetAllVideoGames()
         {
-            return _context.Games;
+            return _context.VideoGames;
         }
 
         public async Task AddUser(string name, string email, string password, bool isAdmin)
@@ -42,6 +42,20 @@ namespace MegaMedia
             };
 
             _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddVideo(string name, decimal price, DateTime releaseDate, string developer)
+        {
+            var newVideoGame = new VideoGame
+            {
+                Name = name,
+                Price = price,
+                ReleaseDate = releaseDate,
+                Developer = developer
+            };
+
+            _context.VideoGames.Add(newVideoGame);
             await _context.SaveChangesAsync();
         }
 
@@ -60,53 +74,71 @@ namespace MegaMedia
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddVideoGame(string name, decimal price, DateTime releaseDate, string developer)
+        public async Task<Movie> GetMovieById(int id)
         {
-            var newGame = new VideoGame
-            {
-                Name = name,
-                Price = price,
-                ReleaseDate = releaseDate,
-                Developer = developer
-            };
-
-            _context.Games.Add(newGame);
-            await _context.SaveChangesAsync();
+            return await _context.Movies.FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public async Task RentMovieToUser(int userId, int movieId)
+        public async Task UpdateMovie(int id, string name, decimal price, DateTime releaseDate, string director, string studio)
         {
-            var user = await _context.Users.Include(u => u.RentedMovies).FirstOrDefaultAsync(u => u.Id == userId);
-            var movie = await _context.Movies.FirstOrDefaultAsync(m => m.Id == movieId);
+            var movie = await _context.Movies.FindAsync(id);
 
-            if (user != null && movie != null)
+            if (movie != null)
             {
-                user.RentedMovies.Add(movie);
+                movie.Name = name;
+                movie.Price = price;
+                movie.ReleaseDate = releaseDate;
+                movie.Director = director;
+                movie.Studio = studio;
+
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task RentVideoGameToUser(int userId, int gameId)
+        public async Task DeleteMovie(int id)
         {
-            var user = await _context.Users.Include(u => u.RentedGames).FirstOrDefaultAsync(u => u.Id == userId);
-            var game = await _context.Games.FirstOrDefaultAsync(g => g.Id == gameId);
+            var movie = await _context.Movies.FindAsync(id);
 
-            if (user != null && game != null)
+            if (movie != null)
             {
-                user.RentedGames.Add(game);
+                _context.Movies.Remove(movie);
                 await _context.SaveChangesAsync();
             }
         }
 
-        public IQueryable<Movie> GetRentedMoviesForUser(int userId)
+
+        public async Task<VideoGame> GetVideoGameById(int id)
         {
-            return _context.Users.Include(u => u.RentedMovies).Where(u => u.Id == userId).SelectMany(u => u.RentedMovies);
+            return await _context.VideoGames.FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public IQueryable<VideoGame> GetRentedGamesForUser(int userId)
+        public async Task UpdateVideo(int id, string name, decimal price, DateTime releaseDate, string developer)
         {
-            return _context.Users.Include(u => u.RentedGames).Where(u => u.Id == userId).SelectMany(u => u.RentedGames);
+            var videoGame = await _context.VideoGames.FindAsync(id);
+
+            if (videoGame != null)
+            {
+                videoGame.Name = name;
+                videoGame.Price = price;
+                videoGame.ReleaseDate = releaseDate;
+                videoGame.Developer = developer;
+               
+
+                await _context.SaveChangesAsync();
+            }
         }
+
+        public async Task DeleteVideoGame(int id)
+        {
+            var videoGame = await _context.VideoGames.FindAsync(id);
+
+            if (videoGame != null)
+            {
+                _context.VideoGames.Remove(videoGame);
+                await _context.SaveChangesAsync();
+            }
+        }
+
 
         // Other methods for fetching data or managing models...
     }

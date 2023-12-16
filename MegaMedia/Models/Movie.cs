@@ -7,10 +7,12 @@ namespace MegaMedia.Models
 {
     public class Movie : Product
     {
-        public string Director { get; set; }
         public string Studio { get; set; }
 
+        public string Director { get; set; }
+
+
         // Establishing the many-to-many relationship with User
-        public virtual ICollection<User> UsersWhoRented { get; set; } = new List<User>();
+        public virtual ICollection<User> UsersWhoRentedMovies { get; set; } = new List<User>();
     }
 }

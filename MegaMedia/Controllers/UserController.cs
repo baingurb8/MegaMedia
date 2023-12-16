@@ -22,12 +22,7 @@ namespace MegaMedia.Controllers
         return View(users);
     }
 
-    public async Task<IActionResult> RentMovie(int userId, int movieId)
-    {
-        // Rent a movie to a user
-        await _mediaManager.RentMovieToUser(userId, movieId);
-        return RedirectToAction("Index"); // Redirect back to the user list
-    }
+    
 
     // Other actions: Add, Update, Delete users, etc.
 }

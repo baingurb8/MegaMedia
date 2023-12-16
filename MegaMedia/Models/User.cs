@@ -21,7 +21,10 @@ namespace MegaMedia.Models
         public string PasswordHash { get; set; }
 
         public bool IsAdmin { get; set; }
-        public List<Movie> RentedMovies { get; set; } = new List<Movie>(); // User's rented movies
         public List<VideoGame> RentedGames { get; set; } = new List<VideoGame>(); // User's rented video games
+        
+        public List<Movie> RentedMovies { get; set; } = new List<Movie>(); // User's rented video games
+
+        
     }
 }
